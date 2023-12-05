@@ -10,5 +10,11 @@ export const useOrigin = () => {
   },[])
 
   //读取页面url，防止客户端还没渲染window，服务端确提前渲染完成的报错
-  const origin = typeof window !== "undefined" && window.location.origin ? window.location.origin : ""
+  const origin = typeof window !== "undefined" && window.location.origin ? window.location.origin : "" //url
+
+  if(!mounted) {
+    return ""
+  }
+
+  return origin
 }
