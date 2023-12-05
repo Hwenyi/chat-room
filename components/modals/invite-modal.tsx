@@ -1,3 +1,4 @@
+import axios from "axios"
 import { useModal } from "@/hooks/use-modal-store"
 import { useRouter } from "next/router"
 import {
@@ -16,7 +17,7 @@ import { useState } from "react";
 export const InviteModal = () => {
   const {onOpen, isOpen, onClose, type, data} = useModal() //创建invite浮窗
   const [copied, setCopied] = useState(false) 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false) 
 
   const origin = useOrigin()
 
@@ -35,6 +36,20 @@ export const InviteModal = () => {
     }, 1000)
   }
 
+  //Regenerate invite code
+  const onNewInvite = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.patch(`/api/servers/${server?.id}/invite-code`);
+
+      onOpen("invite", { server: response.data });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
@@ -49,17 +64,19 @@ export const InviteModal = () => {
           </Label>
           <div className="flex items-center mt-2 gap-x-2">
             <Input  
+              disabled={isLoading}
               className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:rinig-offset-0"
               value={inviteUrl}
             />
-            <Button onClick={onCopy} size="icon">
+            <Button disabled={isLoading} onClick={onCopy} size="icon">
               { copied
                 ? <Check className="w-4 h-4" />                
                 : <Copy className="w-4 h-4"/>
               }
             </Button>
           </div>
-          <Button variant="link" size="sm" className="text-xs text-zinc-500 mt-4">
+          {/* 重新生成邀请码 */}
+          <Button onClick={onNewInvite} disabled={isLoading} variant="link" size="sm" className="text-xs text-zinc-500 mt-4"> 
             Generate a new link
             <RefreshCw className="w-4 h-4 ml-2"/>
           </Button>
