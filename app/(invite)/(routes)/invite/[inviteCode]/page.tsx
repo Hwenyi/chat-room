@@ -15,12 +15,13 @@ const InviteCodePage = async ({
 }: InviteCodePageProps) => {
   const profile = await currentProfile();
 
+  //redirectToSignTn()重定向存在bug，改用redirect("/")
   if (!profile) {
-    return redirectToSignIn();
+    return redirect("/")
   }
 
   if (!params.inviteCode) {
-    return redirect("/");
+    return redirect("/")
   }
 
   const existingServer = await db.server.findFirst({
