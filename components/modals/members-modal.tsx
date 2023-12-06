@@ -4,6 +4,7 @@ import { useRouter } from "next/router"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -13,6 +14,9 @@ import { Button } from "../ui/button";
 import { Check, Copy, RefreshCw } from "lucide-react";
 import { useOrigin } from "@/hooks/use-origin";
 import { useState } from "react";
+import { ServerWithMembersWithProfiles } from "@/types";
+import { ScrollArea } from "../ui/scroll-area";
+import { UserAvatar } from "../user-avatar";
 
 export const MembersModal = () => {
   const {onOpen, isOpen, onClose, type, data} = useModal() //创建invite浮窗
@@ -23,7 +27,7 @@ export const MembersModal = () => {
 
   const isModalOpen = isOpen &&  type === "members" //传递可点击参数
 
-  const {server} = data
+  const {server} = data as {server: ServerWithMembersWithProfiles}
 
   const inviteUrl = `${origin}/invite/${server?.inviteCode}`
 
@@ -55,32 +59,19 @@ export const MembersModal = () => {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Invite Friends
+            Manage Members
           </DialogTitle>
+          <DialogDescription className="text-center text-zinc-500">
+            {server?.members?.length}  Members
+          </DialogDescription>
         </DialogHeader>
-        <div className="p-6">
-          <Label className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-            Server invite link
-          </Label>
-          <div className="flex items-center mt-2 gap-x-2">
-            <Input  
-              disabled={isLoading}
-              className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:rinig-offset-0"
-              value={inviteUrl}
-            />
-            <Button disabled={isLoading} onClick={onCopy} size="icon">
-              { copied
-                ? <Check className="w-4 h-4" />                
-                : <Copy className="w-4 h-4"/>
-              }
-            </Button>
-          </div>
-          {/* 重新生成邀请码 */}
-          <Button onClick={onNewInvite} disabled={isLoading} variant="link" size="sm" className="text-xs text-zinc-500 mt-4"> 
-            Generate a new link
-            <RefreshCw className="w-4 h-4 ml-2"/>
-          </Button>
-        </div>
+        <ScrollArea className="mt-8 max-h-[420px] pr-6">
+          {server?.members?.map((member)=> (
+            <div key={member.id} className="flex items-center gap-x-2 mb-6">
+              <UserAvatar src={member.profile.imageUrl}/>
+            </div>
+          ))}
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )
