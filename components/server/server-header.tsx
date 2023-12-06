@@ -55,7 +55,7 @@ export const ServerHeader = ({
         {isModerator && (
           <DropdownMenuItem
             //添加邀请浮窗
-            onClick={() => onOpen("invite",{server})}
+            onClick={() => onOpen("invite", { server })}
             className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer"
           >
             Invite People
@@ -74,7 +74,7 @@ export const ServerHeader = ({
         )}
         {isAdmin && (
           <DropdownMenuItem
-            onClick={() => onOpen("members",{ server })}
+            onClick={() => onOpen("members", { server })}
             className="px-3 py-2 text-sm cursor-pointer"
           >
             Manage Members
