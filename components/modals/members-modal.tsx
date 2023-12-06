@@ -11,12 +11,18 @@ import {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Check, Copy, RefreshCw } from "lucide-react";
+import { Check, Copy, RefreshCw, ShieldAlert, ShieldCheck } from "lucide-react";
 import { useOrigin } from "@/hooks/use-origin";
 import { useState } from "react";
 import { ServerWithMembersWithProfiles } from "@/types";
 import { ScrollArea } from "../ui/scroll-area";
 import { UserAvatar } from "../user-avatar";
+
+const roleIconMap = {
+  "GUEST" : null,
+  "MODERATOR": <ShieldCheck className="w-4 h-4 text-zinc-500"/>,
+  "ADMIN": <ShieldAlert className="w-4 h-4 text-zinc-500"/>
+}
 
 export const MembersModal = () => {
   const {onOpen, isOpen, onClose, type, data} = useModal() //创建invite浮窗
@@ -69,6 +75,17 @@ export const MembersModal = () => {
           {server?.members?.map((member)=> (
             <div key={member.id} className="flex items-center gap-x-2 mb-6">
               <UserAvatar src={member.profile.imageUrl}/>
+
+              <div className="flex flex-col gap-y-1">
+                <div className="text-xs font-semibold flex items-center gap-x-1">
+                  {member.profile.name}
+                  {roleIconMap[member.role]}
+                </div>
+                <p className="text-xs text-zinc-500">
+                  {member.profile.email}
+                </p>
+              </div>
+              {/* 管理员下拉菜单界面 */}
             </div>
           ))}
         </ScrollArea>
