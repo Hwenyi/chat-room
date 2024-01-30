@@ -30,14 +30,13 @@ export const ServerHeader = ({
   server,
   role
 }: ServerHeaderProps) => {
-  const {onOpen} = useModal()
+  const { onOpen } = useModal();
 
-  const isAdmin = role === MemberRole.ADMIN; //是否是管理员
-  const isModerator = isAdmin || role === MemberRole.MODERATOR; //是否是成员
+  const isAdmin = role === MemberRole.ADMIN;
+  const isModerator = isAdmin || role === MemberRole.MODERATOR;
 
-// 下拉菜单
   return (
-    <DropdownMenu> 
+    <DropdownMenu>
       <DropdownMenuTrigger
         className="focus:outline-none" 
         asChild
@@ -54,7 +53,6 @@ export const ServerHeader = ({
       >
         {isModerator && (
           <DropdownMenuItem
-            //添加邀请浮窗
             onClick={() => onOpen("invite", { server })}
             className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer"
           >
@@ -64,7 +62,6 @@ export const ServerHeader = ({
         )}
         {isAdmin && (
           <DropdownMenuItem
-            //添加设置浮窗
             onClick={() => onOpen("editServer", { server })}
             className="px-3 py-2 text-sm cursor-pointer"
           >
@@ -83,8 +80,8 @@ export const ServerHeader = ({
         )}
         {isModerator && (
           <DropdownMenuItem
+            onClick={() => onOpen("createChannel")}
             className="px-3 py-2 text-sm cursor-pointer"
-            onClick={()=> onOpen("createChannel")} //data为空
           >
             Create Channel
             <PlusCircle className="h-4 w-4 ml-auto" />
